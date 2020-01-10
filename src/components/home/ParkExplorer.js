@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react"
 import AreaList from "./AreaList"
 import "./Explorer.css"
 import Attractions from "./Attractions"
-import useSimpleAuth from "../../hooks/ui/useSimpleAuth"
+import { isAuthenticated } from "../helpers/simpleAuth"
 
 const ParkExplorer = props => {
     const [areas, setAreas] = useState([])
     const [attractions, setAttractions] = useState([])
-    const { isAuthenticated } = useSimpleAuth()
 
     const getAttractions = (areaId) => {
         if (isAuthenticated()) {

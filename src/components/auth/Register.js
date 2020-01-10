@@ -1,104 +1,126 @@
-import React, { useRef } from "react"
+import React, { Component } from "react"
 import { withRouter } from "react-router-dom"
-import useSimpleAuth from "../../hooks/ui/useSimpleAuth"
+import { register } from "../helpers/simpleAuth"
 import "./Login.css"
 
 
-const Register = props => {
-    const email = useRef()
-    const userName = useRef()
-    const lastName = useRef()
-    const password = useRef()
-    const firstName = useRef()
-    const familyMembers = useRef()
-    const verifyPassword = useRef()
-    const { register } = useSimpleAuth()
+class Register extends Component {
 
-    const handleRegister = (e) => {
-        e.preventDefault()
+  state = {
+    email: "",
+    userName: "",
+    lastName: "",
+    password: "",
+    firstName: "",
+    familyMembers: 0,
+    verifyPassword: ""
+  }
 
-        const newUser = {
-            "username": userName.current.value,
-            "first_name": firstName.current.value,
-            "last_name": lastName.current.value,
-            "family_members": familyMembers.current.value,
-            "email": email.current.value,
-            "password": password.current.value
-        }
+  handleInputChange = (evt) => {
+    let stateToChange = {}
+    stateToChange[evt.target.id] = evt.target.value
+    this.setState(stateToChange)
+  }
 
-        register(newUser).then(() => {
-            props.history.push({
-                pathname: "/"
-            })
-        })
+  handleRegister = (evt) => {
+    evt.preventDefault()
+
+    const newUser = {
+      "username": this.state.userName,
+      "first_name": this.state.firstName,
+      "last_name": this.state.lastName,
+      "family_members": this.state.familyMembers,
+      "email": this.state.email,
+      "password": this.state.password
     }
 
+    register(newUser).then(() => {
+        this.props.history.push("/")
+    })
+  }
+
+  render() {
     return (
-        <main style={{ textAlign: "center" }}>
-            <form className="form--login" onSubmit={handleRegister}>
-                <h1 className="h3 mb-3 font-weight-normal">Register to use Saturday in the Park</h1>
-                <fieldset>
-                    <label htmlFor="userName"> Username </label>
-                    <input ref={userName} type="text"
-                        name="userName"
-                        className="form-control"
-                        placeholder="Username"
-                        required autoFocus />
-                </fieldset>
-                <fieldset>
-                    <label htmlFor="firstName"> First Name </label>
-                    <input ref={firstName} type="text"
-                        name="firstName"
-                        className="form-control"
-                        placeholder="First name"
-                        required autoFocus />
-                </fieldset>
-                <fieldset>
-                    <label htmlFor="lastName"> Last Name </label>
-                    <input ref={lastName} type="text"
-                        name="lastName"
-                        className="form-control"
-                        placeholder="Last name"
-                        required />
-                </fieldset>
-                <fieldset>
-                    <label htmlFor="inputEmail"> Email address </label>
-                    <input ref={email} type="email"
-                        name="email"
-                        className="form-control"
-                        placeholder="Email address"
-                        required />
-                </fieldset>
-                <fieldset>
-                    <label htmlFor="inputEmail"> Family members </label>
-                    <input ref={familyMembers} type="number"
-                        name="familyMembers"
-                        className="form-control"
-                        required />
-                </fieldset>
-                <fieldset>
-                    <label htmlFor="inputPassword"> Password </label>
-                    <input ref={password} type="password"
-                        name="password"
-                        className="form-control"
-                        placeholder="Password"
-                        required />
-                </fieldset>
-                <fieldset>
-                    <label htmlFor="verifyPassword"> Verify Password </label>
-                    <input ref={verifyPassword} type="password"
-                        name="verifyPassword"
-                        className="form-control"
-                        placeholder="Verify password"
-                        required />
-                </fieldset>
-                <fieldset>
-                    <button type="submit">
-                        Sign in
-                    </button>
-                </fieldset>
-            </form>
-        </main>
+      <main style={{ textAlign: "center" }}>
+        <form className="form--login" onSubmit={this.handleRegister}>
+          <h1 className="h3 mb-3 font-weight-normal">Register to use Saturday in the Park</h1>
+          <fieldset>
+            <label htmlFor="userName"> Username </label>
+            <input onChange={(evt) => this.handleInputChange(evt)}
+              id="userName"
+              type="text"
+              name="userName"
+              className="form-control"
+              placeholder="Username"
+              required autoFocus />
+          </fieldset>
+          <fieldset>
+            <label htmlFor="firstName"> First Name </label>
+            <input onChange={this.handleInputChange}
+              id="firstName"
+              type="text"
+              name="firstName"
+              className="form-control"
+              placeholder="First name"
+              required autoFocus />
+          </fieldset>
+          <fieldset>
+            <label htmlFor="lastName"> Last Name </label>
+            <input onChange={this.handleInputChange}
+              id="lastName"
+              type="text"
+              name="lastName"
+              className="form-control"
+              placeholder="Last name"
+              required />
+          </fieldset>
+          <fieldset>
+            <label htmlFor="inputEmail"> Email address </label>
+            <input onChange={this.handleInputChange}
+              id="email"
+              type="email"
+              name="email"
+              className="form-control"
+              placeholder="Email address"
+              required />
+          </fieldset>
+          <fieldset>
+            <label htmlFor="inputEmail"> Family members </label>
+            <input onChange={this.handleInputChange}
+              id="familyMembers"
+              type="number"
+              name="familyMembers"
+              className="form-control"
+              required />
+          </fieldset>
+          <fieldset>
+            <label htmlFor="inputPassword"> Password </label>
+            <input onChange={this.handleInputChange}
+              id="password"
+              type="password"
+              name="password"
+              className="form-control"
+              placeholder="Password"
+              required />
+          </fieldset>
+          <fieldset>
+            <label htmlFor="verifyPassword"> Verify Password </label>
+            <input onChange={this.handleInputChange}
+              id="verifyPassword"
+              type="password"
+              name="verifyPassword"
+              className="form-control"
+              placeholder="Verify password"
+              required />
+          </fieldset>
+          <fieldset>
+            <button type="submit">
+              Sign in
+            </button>
+          </fieldset>
+        </form>
+      </main>
     )
+  }
 }
 export default withRouter(Register)

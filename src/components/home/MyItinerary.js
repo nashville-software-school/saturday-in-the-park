@@ -1,106 +1,109 @@
-import React, { useEffect, useState, useRef } from "react"
+import React, { Component } from "react"
 import ItineraryDialog from "./ItineraryDialog"
-import useModal from "../../hooks/ui/useModal"
+import modal from "../helpers/modal"
 import "./MyItinerary.css"
 
 
-const MyItinerary = props => {
-    // Create a state variable for itinerary items - useState()
-    const [itineraryList, setItineraryList] = useState([])
-    const { toggleDialog, modalIsOpen } = useModal("#dialog--itinerary")
-    const [currentItinerary, setCurrentItinerary] = useState({})
+class MyItinerary extends Component {
 
-    const getItems = () => {
-        // Fetch the data from localhost:8000/itineraryitems
-        fetch("http://localhost:8000/itineraryitems", {
-            "method": "GET",
-            "headers": {
-                "Accept": "application/json",
-                "Authorization": `Token ${localStorage.getItem("kennywood_token")}`
-            }
-        })
-            // Convert to JSON
-            .then(response => response.json())
-
-            // Store itinerary items in state variable
-            .then((allTheItems) => {
-                setItineraryList(allTheItems)
-            })
+    state = {
+      itineraryList: [],
+      currentItinerary: {id: null}
     }
 
-    const deleteItem = item => {
-        fetch(`http://localhost:8000/itineraryitems/${item.id}`, {
-            "method": "DELETE",
-            "headers": {
-                "Authorization": `Token ${localStorage.getItem("kennywood_token")}`
-            }
-        })
-            .then(getItems)
+    componentDidMount() {
+      this.getItems()
+      window.addEventListener("keyup", this.modalHandler)
     }
 
-    // Create useEffect()
-    useEffect(() => {
-        getItems()
+    componentWillUnmount() {
+      window.removeEventListener("keyup", this.modalHandler)
+    }
 
-        const handler = e => {
-            if (e.keyCode === 27) {
-                console.log(`MyItinerary useEffect() modalIsOpen = ${modalIsOpen}`)
-                if (modalIsOpen) {
-                    toggleDialog(false)
-                }
-            }
+    modalHandler = (evt) => {
+      if (evt.keyCode === 27) {
+        if (modal.isOpen) {
+          modal.toggleDialog(false, "#dialog--itinerary")
         }
+      }
+    }
 
-        window.addEventListener("keyup", handler)
+    getItems = () => {
+      // Fetch the data from localhost:8000/itineraryitems
+      fetch("http://localhost:8000/itineraryitems", {
+          "method": "GET",
+          "headers": {
+            "Accept": "application/json",
+            "Authorization": `Token ${localStorage.getItem("kennywood_token")}`
+          }
+      })
+      // Convert to JSON
+      .then(response => response.json())
 
-        return () => window.removeEventListener("keyup", handler)
-    }, [])
+      // Store itinerary items in state variable
+      .then((allTheItems) => {
+          this.setState({itineraryList: allTheItems})
+      })
+    }
 
-    const updateItineraryItem = (starttime) => {
-        fetch(`http://localhost:8000/itineraryitems/${currentItinerary.id}`, {
-            "method": "PUT",
-            "headers": {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization": `Token ${localStorage.getItem("kennywood_token")}`
-            },
-            "body": JSON.stringify({
-                "starttime": starttime
-            })
+    deleteItem = (item) => {
+      fetch(`http://localhost:8000/itineraryitems/${item.id}`, {
+          "method": "DELETE",
+          "headers": {
+              "Authorization": `Token ${localStorage.getItem("kennywood_token")}`
+          }
+      })
+      .then(this.getItems)
+    }
+
+
+    updateItineraryItem = (starttime) => {
+      fetch(`http://localhost:8000/itineraryitems/${this.state.currentItinerary.id}`, {
+        "method": "PUT",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": `Token ${localStorage.getItem("kennywood_token")}`
+        },
+        "body": JSON.stringify({
+          "starttime": starttime
         })
-            .then(() => {
-                console.log("Updated!!!! YAY!!!!  🙌🏼")
-                toggleDialog(false)
-            })
-            .then(getItems)
+      })
+      .then(() => {
+        console.log("Updated!!!! YAY!!!!  🙌🏼")
+        modal.toggleDialog(false)
+      })
+      .then(this.getItems)
     }
 
 
     // Create HTML representation with JSX
-    return (
+    render() {
+      return (
         <>
-            <ItineraryDialog toggleDialog={toggleDialog} callback={(starttime)=> {
-                updateItineraryItem(starttime)
-            }} />
-            <h2>What I Want to Do on Saturday</h2>
-                <div className="itineraryItems">
-                {
-                    itineraryList.map((item) => {
-                        return <div>
-                            {item.attraction.name} in {item.attraction.area.name} at {item.starttime}
-                            <button onClick={() => {
-                                deleteItem(item)
-                            }}>Delete Me</button>
-                            <button onClick={() => {
-                                setCurrentItinerary(item)
-                                toggleDialog(true)
-                            }}>Edit Me</button>
-                        </div>
-                    })
-                }
-                </div>
+          <ItineraryDialog toggleDialog={modal.toggleDialog} callback={(starttime) => {
+            this.updateItineraryItem(starttime)
+          }} />
+          <h2>What I Want to Do on Saturday</h2>
+          <div className="itineraryItems">
+          {
+            this.state.itineraryList.map((item) => {
+              return <div>
+                {item.attraction.name} in {item.attraction.area.name} at {item.starttime}
+                <button onClick={() => {
+                  this.deleteItem(item)
+                }}>Delete Me</button>
+                <button onClick={() => {
+                  this.setCurrentItinerary(item)
+                  modal.toggleDialog(true)
+                }}>Edit Me</button>
+              </div>
+            })
+          }
+          </div>
         </>
-    )
+      )
+    }
 }
 
 export default MyItinerary
