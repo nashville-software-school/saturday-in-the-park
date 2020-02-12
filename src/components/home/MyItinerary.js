@@ -71,7 +71,7 @@ class MyItinerary extends Component {
       })
       .then(() => {
         console.log("Updated!!!! YAY!!!!  🙌🏼")
-        modal.toggleDialog(false)
+        modal.toggleDialog(true, "#dialog--itinerary")
       })
       .then(this.getItems)
     }
@@ -88,14 +88,14 @@ class MyItinerary extends Component {
           <div className="itineraryItems">
           {
             this.state.itineraryList.map((item) => {
-              return <div>
+              return <div key={item.id}>
                 {item.attraction.name} in {item.attraction.area.name} at {item.starttime}
                 <button onClick={() => {
                   this.deleteItem(item)
                 }}>Delete Me</button>
                 <button onClick={() => {
-                  this.setCurrentItinerary(item)
-                  modal.toggleDialog(true)
+                  this.setState({currentItinerary: item})
+                  modal.toggleDialog(false, "#dialog--itinerary")
                 }}>Edit Me</button>
               </div>
             })

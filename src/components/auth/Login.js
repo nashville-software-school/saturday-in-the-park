@@ -10,7 +10,7 @@ class Login extends Component {
       password: ""
     }
 
-    handleInputChange(evt) {
+    handleInputChange = (evt) => {
       let stateToChange = {}
       stateToChange[evt.target.id] = evt.target.value
       this.setState(stateToChange)

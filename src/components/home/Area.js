@@ -1,17 +1,19 @@
-import React from "react"
+import React, { Component } from "react"
 
-const Area = props => {
+class Area extends Component {
 
+  render() {
     return (
-        <>
-            <section className="parkArea">
-                <button className="fakeLink parkArea__link"
-                        onClick={() => props.getAttractions(props.area.id)}>
-                    {props.area.name}
-                </button>
-            </section>
-        </>
+      <>
+        <section className="parkArea">
+          <button className="fakeLink parkArea__link"
+            onClick={() => this.props.getAttractions(this.props.area.id)}>
+            {this.props.area.name}
+          </button>
+        </section>
+      </>
     )
+  }
 }
 
 export default Area

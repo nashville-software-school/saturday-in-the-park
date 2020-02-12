@@ -1,5 +1,5 @@
 import { Route } from "react-router-dom"
-import React from "react"
+import React, {Component } from "react"
 import { withRouter } from "react-router-dom"
 import Register from "./auth/Register"
 import Login from "./auth/Login"
@@ -7,58 +7,60 @@ import ParkExplorer from "./home/ParkExplorer"
 import MyItinerary from "./home/MyItinerary"
 
 
-const ApplicationViews = () => {
-  return (
-    <React.Fragment>
+class ApplicationViews extends Component {
 
-      <Route
-        exact path="/" render={props => {
-          return <ParkExplorer {...props} />
-        }}
-      />
+  render() {
+    return (
+      <React.Fragment>
+        <Route
+          exact path="/" render={props => {
+            return <ParkExplorer {...props} />
+          }}
+        />
 
-      <Route
-        path="/register" render={props => {
-          return <Register {...props} />
-        }}
-      />
+        <Route
+          path="/register" render={props => {
+            return <Register {...props} />
+          }}
+        />
 
-      <Route
-        path="/login" render={props => {
-          return <Login {...props} />
-        }}
-      />
+        <Route
+          path="/login" render={props => {
+            return <Login {...props} />
+          }}
+        />
 
-      <Route
-        path="/areas" render={props => {
-          return (
-            <>
-              <h1>Areas</h1>
-              <img className="swings" src={require('./home/swings.jpeg')} alt="My Dog" />
-            </>
-          )
-        }}
-      />
-
-      <Route
-        path="/attractions" render={props => {
+        <Route
+          path="/areas" render={props => {
             return (
               <>
-                <h1>Attractions</h1>
+                <h1>Areas</h1>
                 <img className="swings" src={require('./home/swings.jpeg')} alt="My Dog" />
               </>
             )
-        }}
-      />
+          }}
+        />
 
-      <Route
-        path="/myitinerary" render={props => {
-          return <MyItinerary />
-        }}
-      />
+        <Route
+          path="/attractions" render={props => {
+            return (
+              <>
+                <h1>Attractions</h1>
+                <img className="swings" src={require('./home/swings.jpeg')} alt="swings ride" />
+              </>
+            )
+          }}
+        />
 
-    </React.Fragment>
-  )
+        <Route
+          path="/myitinerary" render={props => {
+            return <MyItinerary />
+          }}
+        />
+
+      </React.Fragment>
+    )
+  }
 }
 
 export default withRouter(ApplicationViews)
