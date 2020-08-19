@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react"
+import React, { useEffect, useState } from "react"
 import ItineraryDialog from "./ItineraryDialog"
 import useModal from "../../hooks/ui/useModal"
 import "./MyItinerary.css"
@@ -40,7 +40,6 @@ const MyItinerary = props => {
 
     // Create useEffect()
     useEffect(() => {
-        getItems()
 
         const handler = e => {
             if (e.keyCode === 27) {
@@ -54,6 +53,10 @@ const MyItinerary = props => {
         window.addEventListener("keyup", handler)
 
         return () => window.removeEventListener("keyup", handler)
+    })
+
+    useEffect(() => {
+        getItems()
     }, [])
 
     const updateItineraryItem = (starttime) => {
@@ -79,26 +82,27 @@ const MyItinerary = props => {
     // Create HTML representation with JSX
     return (
         <>
-            <ItineraryDialog toggleDialog={toggleDialog} callback={(starttime)=> {
+            <ItineraryDialog toggleDialog={toggleDialog} callback={(starttime) => {
                 updateItineraryItem(starttime)
             }} />
             <h2>What I Want to Do on Saturday</h2>
-                <div className="itineraryItems">
+            <div className="itineraryItems">
                 {
-                    itineraryList.map((item) => {
-                        return <div>
-                            {item.attraction.name} in {item.attraction.area.name} at {item.starttime}
-                            <button onClick={() => {
+                    itineraryList.map((item, i) => {
+                        return <div key={i}>
+                            <h4>{item.attraction.name} in {item.attraction.area.name} at {item.starttime}</h4>
+                            <p><button onClick={() => {
                                 deleteItem(item)
                             }}>Delete Me</button>
-                            <button onClick={() => {
-                                setCurrentItinerary(item)
-                                toggleDialog(true)
-                            }}>Edit Me</button>
+                                <button onClick={() => {
+                                    setCurrentItinerary(item)
+                                    toggleDialog(true)
+                                }}>Edit Me</button>
+                            </p>
                         </div>
                     })
                 }
-                </div>
+            </div>
         </>
     )
 }

@@ -7,8 +7,8 @@ const Attractions = props => {
         <>
             <article className="explorerList">
                 {
-                    props.attractions.map(ride =>
-                        <Attraction key={ride.id} ride={ride} {...props} />)
+                    props.attractions.map((ride, i) =>
+                        <Attraction key={i} ride={ride} {...props} />)
                 }
             </article>
         </>
