@@ -88,8 +88,8 @@ const MyItinerary = props => {
             <h2>What I Want to Do on Saturday</h2>
             <div className="itineraryItems">
                 {
-                    itineraryList.map((item, i) => {
-                        return <div key={i}>
+                    itineraryList.map((item) => {
+                        return <div key={item.id}>
                             <h4>{item.attraction.name} in {item.attraction.area.name} at {item.starttime}</h4>
                             <p><button onClick={() => {
                                 deleteItem(item)

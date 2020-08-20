@@ -54,7 +54,7 @@ const Attraction = props => {
 
     return (
         <>
-            <dialog ref={dialog} id={props.ride.id} className="dialog--time">
+            <dialog ref={dialog} id={`dialog--${props.ride.id}`} className="dialog--time">
                 <label htmlFor="starttime">When do you want to ride?</label>
                 <input ref={starttime} type="text" name="starttime" autoFocus required />
 
